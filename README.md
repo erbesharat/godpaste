@@ -8,10 +8,19 @@ go get github.com/erbesharat/godpaste
 ```
 
 ## Usage
-
+Basic plain-text item creation:
 ```bash
-godpaste FILE_NAME
+godpaste --file test.txt
 ```
+Set expiry (1–365 days):
+```bash
+godpaste --file test.txt --expire 5
+```
+Set syntax to JavaScript:
+```bash
+godpaste --file test.js --syntax js
+```
+
 
 ## Contributing
 
