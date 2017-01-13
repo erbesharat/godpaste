@@ -28,7 +28,7 @@ func main() {
 	app.Usage = "A command line tool for creating items on dpaste"
 	app.UsageText = "godpaste FILE_NAME"
 	app.Authors = []cli.Author{
-		cli.Author{
+		{
 			Name:  "Erfan Besharat \"@erbesharat\"",
 			Email: "erbesharat@gmail.com",
 		},
@@ -57,25 +57,22 @@ func main() {
 	}
 
 	app.Action = func(c *cli.Context) error {
-		if file != "none" && expire == "none" {
+		if file != "none" {
 			text, err := ioutil.ReadFile(file)
 			checkerr(err, "Couldn't find your file")
 			v.Add("content", string(text))
 			v.Add("syntax", syntax)
+			if expire != "none" {
+				v.Add("expiry_days", expire)
+			}
 			resp, err := http.PostForm("http://dpaste.com/api/v2/", v)
 			checkerr(err, "Couldn't create your dpaste")
 			output, _ := resp.Location()
-			fmt.Printf("Check ==> %q", output)
-		} else if file != "none" && expire != "none" {
-			text, err := ioutil.ReadFile(file)
-			checkerr(err, "Couldn't find your file")
-			v.Add("content", string(text))
-			v.Add("expiry_days", expire)
-			v.Add("syntax", syntax)
-			resp, err := http.PostForm("http://dpaste.com/api/v2/", v)
-			checkerr(err, "Couldn't create your dpaste")
-			link, _ := resp.Location()
-			fmt.Printf("link ==> %q ---- Expires in %q days", link, expire)
+			if expire != "none" {
+				fmt.Printf("link ==> %q ---- Expires in %q days", output, expire)
+			} else {
+				fmt.Printf("link ==> %q", output)
+			}
 		} else {
 			fmt.Println("Please give a file. For more information check --help")
 		}
