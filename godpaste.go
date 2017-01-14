@@ -61,7 +61,9 @@ func main() {
 			text, err := ioutil.ReadFile(file)
 			checkerr(err, "Couldn't find your file")
 			v.Add("content", string(text))
-			v.Add("syntax", syntax)
+			if syntax != "none" {
+				v.Add("syntax", syntax)
+			}
 			if expire != "none" {
 				v.Add("expiry_days", expire)
 			}
